@@ -79,10 +79,12 @@ function findSection(a, b) {
   console.log(res)
   return (res)
 }
-
+function difference(a, b) {
+  return Math.abs(a - b);
+}
 function isInsideInterval(a, b, x){
   console.log(a, b, x)
-  if ((x >= a-5) && (x <= b+5)){
+  if ((x >= a-5) && (x <= b)){
     return true;
   }
   else {
@@ -93,40 +95,109 @@ function isInsideInterval(a, b, x){
 // find which section of the line the mouse clicked, in the points or middle
 function whichSection(line,mx,my){
   console.log(mx, my, line)
-    sectionX = findSection(line.x0, line.x1);
-    sectionY = findSection(line.y0, line.y1);
+  var smaller, bigger;
+  var smallerY, smallerY
 
-    //make three sections left middle and right on the line
-    var secLeftX = line.x0 + sectionX;
-    var secMiddleX = secLeftX + sectionX;
-    var secRightX = secMiddleX + sectionX;
+  var res ={
+    sec: "",
+    pt_s: ""
+  };
 
-    var secLeftY = line.y0 + sectionY;
-    var secMiddleY = secLeftY + sectionY;
-    var secRightY = secMiddleY + sectionY;
+  sizeX = difference(line.x0, line.x1);
+  sizeY = difference(line.y0, line.y1);
 
-    if (isInsideInterval(line.x0, secLeftX, mx) && isInsideInterval(line.y0, secLeftY, my)){ //right
-      console.log("left");
-      return("left");
+  if (sizeX > sizeY){
+
+    if ((line.x0 <= line.x1) ){
+      smaller = line.x0;
+      bigger = line.x1;
+      res.pt_s = "0";
     }
-    else if (isInsideInterval(secLeftX, secMiddleX, mx) && isInsideInterval(secLeftY, secMiddleY, my)) {
-      console.log("middle");
-      return("middle");
+    else{
+      smaller = line.x1;
+      bigger = line.x0;
+        res.pt_s = "1";
     }
-    else if (isInsideInterval(secMiddleX,secRightX, mx) && isInsideInterval(secMiddleY,secRightY, my)) {
-      console.log("right")
-      return("right")
+
+
+    middle = ((difference(smaller, bigger) / 2) + smaller);
+
+    var smallerDist;
+
+    var dist1 = difference(mx, smaller);
+    var distMiddle = difference(mx, middle);
+    var dist2 = difference(mx, bigger);
+
+    if( (dist1 <= distMiddle) && (dist1 <= dist2)){
+      res.sec = "first section";
+    } else if ((distMiddle <= dist1) && (distMiddle <= dist2)) {
+      res.sec = "middle";
+    } else if ((dist2 <= dist1) && (dist2 <= distMiddle )){
+      res.sec = "third section";
     }
+    return res
+
+  } else {
+
+    if ((line.y0 <= line.y1) ){
+      smaller = line.y0;
+      bigger = line.y1;
+      res.pt_s = "0";
+
+    }
+    else{
+      smaller = line.y1;
+      bigger = line.y0;
+      res.pt_s = "1";
+    }
+
+    middle = ((difference(smaller, bigger) / 2) + smaller);
+
+    var smallerDist;
+
+    var dist1 = difference(my, smaller);
+    var distMiddle = difference(my, middle);
+    var dist2 = difference(my, bigger);
+
+    if( (dist1 <= distMiddle) && (dist1 <= dist2)){
+      res.sec = "first section";
+    } else if ((distMiddle <= dist1) && (distMiddle <= dist2)) {
+      res.sec = "middle";
+    } else if ((dist2 <= dist1) && (dist2 <= distMiddle )){
+      res.sec = "third section";
+    }
+    return res
+  }
+
+
 
 }
 
 function isLine(lines,mx,my){
-  for(var i=0;i<lines.length;i++){ //esta em alguma linha
+  for(var i=0;i<lines.length;i++){
+    //menor num e maior num
+    var x0, x1, y0, y1;
 
-    if ((mx >= lines[i].x0-5) && (mx <= lines[i].x1+5) && (my >= lines[i].y0-5) && (my <= lines[i].y1+5)){
-      return i;
+    if (lines[i].x0 <= lines[i].x1){
+      x0 = lines[i].x0-3;
+      x1 = lines[i].x1+3;
+    }
+    else{
+      x0 = lines[i].x1-3;
+      x1 = lines[i].x0+3;
+    }
+    if (lines[i].y0 <= lines[i].y1){
+      y0 = lines[i].y0-3;
+      y1 = lines[i].y1+3;
+    }
+    else{
+      y0 = lines[i].y1-3;
+      y1 = lines[i].y0+3;
     }
 
+    if ((mx >= x0) && (mx <= x1) && (my >= y0) && (my <= y1)){
+      return i;
+    }
   }
 
   return -1;
@@ -152,19 +223,19 @@ function draw(){
     ctx.clearRect(0,0,cw,ch);
     // draw all lines at their current positions
     for(var i=0;i<lines.length;i++){
-        drawLine("",lines[i],'black');
+        drawLine("",lines[i],'gray');
     }
     // draw markers if a line is being dragged
     if(nearest){
         // point on line nearest to mouse
         ctx.beginPath();
         ctx.arc(nearest.pt.x,nearest.pt.y,5,0,Math.PI*2);
-        ctx.strokeStyle='red';
+        ctx.strokeStyle='lightcoral';
         ctx.stroke();
         // marker for original line before dragging
-        drawLine(nearest.ptMove,nearest.originalLine,'red');
+        drawLine(nearest.ptMove,nearest.originalLine,'lightcoral');
         // hightlight the line as its dragged
-        drawLine(nearest.ptMove,nearest.line,'red');
+        drawLine(nearest.ptMove,nearest.line,'lightcoral');
     }
 }
 
@@ -226,23 +297,36 @@ function handleMouseMove(e){
       // change nearest line vertices by distance moved
 
       var line=nearest.line;
-      if(nearest.ptMove == "middle"){
+      if(nearest.ptMove.sec == "middle"){ //move entire line
         line.x0+=dx;
         line.y0+=dy;
         line.x1+=dx;
         line.y1+=dy;
       }
-      else if (nearest.ptMove == "left"){
-        line.x0+=dx;
-        line.y0+=dy;
-        // line.x1+=dx;
-        // line.y1+=dy;
+      else if (nearest.ptMove.sec == "first section"){ // move the point with smaller numeber
+        if(nearest.ptMove.pt_s == "0"){
+          line.x0+=dx;
+          line.y0+=dy;
+          // line.x1+=dx;
+          // line.y1+=dy;
+        }
+        else{
+          line.x1+=dx;
+          line.y1+=dy;
+        }
       }
-      else if (nearest.ptMove == "right"){
-        // line.x0+=dx;
-        // line.y0+=dy;
-        line.x1+=dx;
-        line.y1+=dy;
+      else if (nearest.ptMove.sec == "third section"){ // move the point with bigger numeber
+        if(nearest.ptMove.pt_s == "0"){
+          line.x1+=dx;
+          line.y1+=dy;
+
+          // line.x1+=dx;
+          // line.y1+=dy;
+        }
+        else{
+          line.x0+=dx;
+          line.y0+=dy;
+        }
       }
 
     // redraw
