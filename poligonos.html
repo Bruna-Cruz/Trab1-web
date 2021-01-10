@@ -44,49 +44,57 @@
             Projetos</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link active" href="disciplinas.html">
-            <img class = "menu-icon" src="icon/icons8-laptop-computer-64(1).png" alt="">
+          <a class="nav-link active" href="poligonos.html">
+            <img class = "menu-icon" src="icon/icons8-pentagon-32.png" alt="">
             Trabalho 3</a>
         </li>
 
       </ul>
     </nav>
 
-<!-- HOME PAGE -->
+<!-- polygon PAGE -->
 
   <article>
     <ol class="breadcrumb" style= "background-color:#c27878">
       <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-      <li class="breadcrumb-item active">Trabalho 3</li>
+      <li class="breadcrumb-item active">Trabalho 3 </li>
     </ol>
 
-    <h1>Linhas e Poligonos</h1>
-    <p style="color:#888">Trabalho 3 - </p>
+    <h1>Linhas e Polígonos</h1>
+    <p style="color:#888">Trabalho 3 de Programação Web utilizando Javascript.
+    </p>
 
+    <article id= "home-text">
+
+      <p> Para mover a reta inteira clique no meio dela, ou próximo do meio, e arraste. Para mover apenas um ponto, clique nos cantos e arraste. Para dividir a reta em duas, clique em cima dela com o botão direito do mouse.
+      <p> É possivel gerar um polígono selecionando quantos lados deseja (3 à 8).
+    </article>
+
+    <fieldset style="max-width:300px">
+      <legend style="color:#888"><p>Gere um Polígono:</legend>
+        <form onclick="generatePolygon()">
+          <div class="form-group">
+            <select class="custom-select" id="corners" style="background: #ccc; color: white; ">
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+            </select>
+          </div>
+        </form>
+    </fieldset>
 
     <div class="wrapper">
       <section>
-        <h1>Line Test</h1>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-        <h4>Drag the lines...</h4>
-       <canvas id="canvas" width=500 height=500></canvas>
-    </section>
-   </div>
-
-  <!--size must be defined as attribute-->
- <!-- <canvas width='300' height='200' id="canvas"/> -->
-
- <script src="T3/script.js"></script>
-
-
+          <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+           <canvas id="canvas" width=650 height=650 style="background:#cccccc7d;"></canvas>
+       </section>
+     </div>
+    <script src="T3/script.js"></script>
   </article>
-
-
-
-  </section>
-
-
-
+</section>
 </body>
 
 <footer>
