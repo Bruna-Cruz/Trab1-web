@@ -33,12 +33,18 @@ canvas.addEventListener('mouseup', handleMouseUpOut);
 canvas.addEventListener('mousedown', handleMouseDown);
 canvas.addEventListener('mouseout', handleMouseUpOut);
 
-//////////////////////////////////////////////////////////////////
+
+function difference(a, b) {
+  return Math.abs(a - b);
+}
 
 //generate polygon based on corners chose by user
 function generatePolygon (){
 
-  var corners = parseInt(document.getElementById("corners").value);
+  // var corners = parseInt(document.getElementById("corners").value);
+  var value = $("#corners").val();
+  // var corners = parseInt(document.getElementById("corners").value);
+  var corners= parseInt(value)
   if(corners == 0 )
     return;
   lines=[];
@@ -123,6 +129,8 @@ function selectedLine(mx,my){
     var index,pt;
 
     index = isLine(lines, mx, my)
+    if (index == -1)
+      return
     var line=lines[index];
     if (rightClick == false){
       sec = whichSection(line,mx,my)
@@ -136,15 +144,9 @@ function selectedLine(mx,my){
     return -1
 }
 
-
-function difference(a, b) {
-  return Math.abs(a - b);
-}
-
-
 // find which section of the line the mouse clicked, in the pts or middle
 function whichSection(line,mx,my){
-  console.log(mx, my, line)
+  // console.log(mx, my, line)
   var smaller, bigger;
   //response telling if the mouse click is near the smaller, middle or bigger point (x or y)
   var res ={
@@ -348,7 +350,10 @@ function handleMouseMove(e){
   startY=mouseY;
   // change selected line vertices by distance moved
 
+  if (selected == undefined)
+    return
   var line=selected.line;
+
   if(selected.ptMove.sec == "middle"){ //move entire line
     line.x0+=dx;
     line.y0+=dy;
