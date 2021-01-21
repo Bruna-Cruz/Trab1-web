@@ -5,6 +5,7 @@
   <title>Projetos</title>
   <link rel="stylesheet" href="css/bootstrap.css">
   <link rel="stylesheet" type="text/css" href="css/style.css" />
+
 </head>
 <body>
 
@@ -14,6 +15,7 @@
     Discente de Informática Biomédica - UFPR</b>
   </header>
 
+  <script src="T4/megasena.js"></script>
 
 
   <!-- MENU -->
@@ -35,8 +37,8 @@
             Disciplinas</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link active" href="projetos.html">
-            <img class = "menu-icon " src="icon/icons8-laptop-computer-64(1).png" alt="">
+          <a class="nav-link" href="projetos.html">
+            <img class = "menu-icon" src="icon/icons8-laptop-computer-64(4).png" alt="">
             Projetos</a>
         </li>
         <li class="nav-item">
@@ -45,9 +47,9 @@
             Trabalho 3</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="megasena.html">
-            <img class = "menu-icon " src="icon/icons8-clover-50(1).png" alt="">
-            Mega-Sena</a>
+          <a class="nav-link active" href="megasena.html">
+            <img class = "menu-icon " src="icon/icons8-clover-50.png" alt="">
+            Trabalho 4</a>
         </li>
       </ul>
     </nav>
@@ -57,37 +59,42 @@
 
   <ol class="breadcrumb" style= "background-color:#c27878">
     <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-    <li class="breadcrumb-item active">Projetos</li>
+    <li class="breadcrumb-item active">MegaSena</li>
   </ol>
 
-  <h1>Projetos</h1>
-  <p style="color:#888">Projetos que estou participando no momento - 2020</p>
+  <h1>Loteria</h1>
+  <p style="color:#888">Digite os números escolhidos e será verificado se já sairam</p>
 
 
   <div class="row justify-content-md-center" style="margin-right: 35px; margin-left: 35px;">
-    <div class="card border-primary mb-3 card-disc" >
-      <div class="card-header" style="background-color:  #acacac ; border-bottom: 0 !important ">Projeto de Extenção</div>
+    <div class="card border-primary mb-3 card-lotto" >
+      <div class="card-header" style="background-color:  #acacac ; border-bottom: 0 !important ">Números</div>
       <div class="card-body">
-        <h4 class="card-title"> PROTECA</h4>
-        <p class="card-text">Professora Elenice</p>
+        <div  class="card-keys">
+
+         <div id="keys" class="card-keys__keys">
+
+         </div>
+       </div>
       </div>
     </div>
 
-    <div class="card border-primary mb-3  card-disc" >
-      <div class="card-header" style="background-color:  #acacac ; border-bottom: 0 !important ">Projeto C3SL </div>
+    <div class="card border-primary mb-3  card-lotto" >
+      <div class="card-header" style="background-color:  #acacac ; border-bottom: 0 !important ">Números Escolhidos</div>
       <div class="card-body">
-        <h4 class="card-title">PinSIS</h4>
-        <p class="card-text">Professor Grégio</p>
+        <div class="card-keys__display">0</div>
+
       </div>
     </div>
 
-    <div class="card border-primary mb-3 card-disc" >
+    <div class="card border-primary mb-3 card-lotto" >
       <div class="card-header" style="background-color:  #acacac ; border-bottom: 0 !important; ">Projeto C3SL </div>
       <div class="card-body">
         <h4 class="card-title">Corvus</h4>
         <p class="card-text" style= "  ">Professor Grégio</p>
       </div>
     </div>
+  </div>
   </article>
 
   </section>
