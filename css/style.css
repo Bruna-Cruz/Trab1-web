@@ -116,8 +116,9 @@ a:hover{
   background-color: #acacac;
 }
 
+/* megasena */
 .card-lotto{
-  width: 500px;
+  min-width: 400px;
   margin: 5px;
   border-width: 0px;
   background-color: #acacac;
@@ -137,27 +138,36 @@ a:hover{
   margin-left: auto;
   margin-right: auto;
   margin-top: 2em;
-  max-width:  480px;
+  /* max-width:  480px; */
   overflow: hidden;
 }
 
 .card-keys__display {
-  background-color: #222222;
-  color: #fff;
+  background-color: white;
+  color: #ccc;
   font-size: 1.714285714em;
   padding: 0.5em 0.75em;
   text-align: right;
 }
 
 .card-keys__keys {
-  background-color: #999;
+  /* background-color: #999; */
   display: grid;
   grid-gap: 1px;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(10, 1fr);
+
+
+}
+
+@media (max-width: 1132px) {
+  .card-keys__keys {
+    grid-template-columns: repeat(5, 1fr);
+
+  }
 }
 
 .card-keys__keys > * {
-  background-color: #fff;
+  background-color:#c27878;
   padding: 0.5em 1.25em;
   position: relative;
   text-align: center;
@@ -165,7 +175,7 @@ a:hover{
 
 .card-keys__keys > *:active::before,
 .card-keys__keys > .is-depressed::before {
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: none !important;
   bottom: 0;
   box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.5) inset;
   content: "";
@@ -175,4 +185,17 @@ a:hover{
   right: 0;
   top: 0;
   z-index: 1;
+}
+
+.btn-secondary{
+  background-color: #c27878 !important;
+  border-radius: 0 !important;
+  border-color: white;
+}
+
+.selected {
+  background-color: gray !important;
+}
+#btn-search{
+  background-color: #c27878 !important;
 }

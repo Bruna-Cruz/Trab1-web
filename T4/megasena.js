@@ -25,16 +25,34 @@ window.onload = init;
     //put the buttons and its value from numbers[] on div #keys
     for (var i=0; i < numbers.length; i++){
        var  btn = document.createElement("button")
-       btn.className= "btn btn-outline-secondary";
+       var search = document.getElementById("search-btn");
+
+       btn.className= "btn btn-secondary";
        btn.value = i+1;
 
        //checks if didnt get at num_max yet if not, disable button and add to display
        btn.onclick = function(btn) {
-         if (n_amount < NUM_MAX){
-           this.disabled = true;
-           add_key(this.value); //add to display
-           n_amount++;
+         if (this.classList.contains("selected") == false){
+           if (n_amount < NUM_MAX){
+             $(this).addClass("selected");
+             add_key(this.value); //add to display
+             n_amount++;
+           }
          }
+         else{
+           $(this).removeClass("selected");
+           remove_key(this.value);
+           n_amount--;
+
+           //disable search button
+           search.setAttribute("disabled",true);
+         }
+
+         //active button to search
+         if (n_amount == NUM_MAX){
+           search.removeAttribute("disabled");
+         }
+
        };
 
        btn.appendChild(document.createTextNode(numbers[i]));
@@ -48,9 +66,14 @@ window.onload = init;
     const display = document.querySelector('.card-keys__display')
     var selected_numbers = []
 
-    //add keys from buttons clicked to display
+    //add and remove keys from buttons clicked to display
     function add_key(key){
       selected_numbers.push(key)
+      display.textContent = selected_numbers;
+    }
+
+    function remove_key(key){
+      selected_numbers = selected_numbers.filter(item => item !== key);
       display.textContent = selected_numbers;
     }
 
