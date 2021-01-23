@@ -5,7 +5,7 @@
     // (20 pontos) Ao clicar no botão "conferir" deve aparecer a lista de concursos que aquele jogo ganhou a mega-sena, quina e quadra.
     // (10 pontos) Questões estéticas são por conta do aluno.
     // (10 pontos) Incluir alguma ação relevate com o evento "mouseover", como por exemplo o número de concursos que o número foi sorteado.
-const MAX = 49;
+const MAX = 60;
 var NUM_MAX = 6;
 var n_amount = 0; //amount of keys buttons selected
 
@@ -69,6 +69,7 @@ window.onload = init;
     //add and remove keys from buttons clicked to display
     function add_key(key){
       selected_numbers.push(key)
+      selected_numbers.sort()
       display.textContent = selected_numbers;
     }
 
@@ -89,36 +90,47 @@ window.onload = init;
 
 
 
-JSONfile = csvJSON("Todos-os-resultados-da-Mega-Sena-—-Rede-Loteria.csv");
-console.log(JSONfile)
+file_name = "Todos-os-resultados-da-Mega-Sena-—-Rede-Loteria.csv";
 //var csv is the CSV file with headers
-function csvJSON(csv){
+csvJSON(file_name)
+function csvJSON(file){
 
-  var lines=csv.split("\n");
-
-  var result = [];
-
-  // NOTE: If your columns contain commas in their values, you'll need
-  // to deal with those before doing the next step
-  // (you might convert them to &&& or something, then covert them back later)
-  // jsfiddle showing the issue https://jsfiddle.net/
-  var headers=lines[0].split(",");
-
-  for(var i=1;i<lines.length;i++){
-
-      var obj = {};
-      var currentline=lines[i].split(",");
-
-      for(var j=0;j<headers.length;j++){
-          obj[headers[j]] = currentline[j];
-      }
-
-      result.push(obj);
-
+  var request = new XMLHttpRequest();
+  request.open("GET", file, false);
+  request.send(null);
+  var csvData = new Array();
+  var jsonObject = request.responseText.split(/\r?\n|\r/);
+  for (var i = 0; i < jsonObject.length; i++) {
+    csvData.push(jsonObject[i].split(','));
   }
+  console.log(csvData)
+// Retrived dat
 
-  //return result; //JavaScript object
-  return JSON.stringify(result); //JSON
+  // var lines=csv.split("\n");
+  //
+  // var result = [];
+  //
+  // // NOTE: If your columns contain commas in their values, you'll need
+  // // to deal with those before doing the next step
+  // // (you might convert them to &&& or something, then covert them back later)
+  // // jsfiddle showing the issue https://jsfiddle.net/
+  // var headers=lines[0].split(",");
+  //
+  // for(var i=1;i<lines.length;i++){
+  //
+  //     var obj = {};
+  //     var currentline=lines[i].split(",");
+  //
+  //     for(var j=0;j<headers.length;j++){
+  //         obj[headers[j]] = currentline[j];
+  //     }
+  //
+  //     result.push(obj);
+  //
+  // }
+  //
+  // //return result; //JavaScript object
+  // return JSON.stringify(result); //JSON
 }
 
  // document.getElementById("myBtn").disabled = true;
