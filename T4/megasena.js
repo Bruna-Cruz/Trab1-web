@@ -5,15 +5,34 @@
     // (20 pontos) Ao clicar no botão "conferir" deve aparecer a lista de concursos que aquele jogo ganhou a mega-sena, quina e quadra.
     // (10 pontos) Questões estéticas são por conta do aluno.
     // (10 pontos) Incluir alguma ação relevate com o evento "mouseover", como por exemplo o número de concursos que o número foi sorteado.
+url = "https://raw.githubusercontent.com/Bruna-Cruz/Trab1-web/main/T4/Todos-os-resultados-da-Mega-Sena-%E2%80%94-Rede-Loteria.csv";
+//var csv is the CSV file with headers
+
 const MAX = 60;
 var NUM_MAX = 6;
 var n_amount = 0; //amount of keys buttons selected
+
+var selected_numbers = []
+
+var index_hits = [];
+var index_quadra = [];
+var index_quina = [];
+var index_sena = [];
+
+
 
 (function(window, document, undefined){
 
 window.onload = init;
 
   function init(){
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip()
+    })
+
+
+    const display = document.querySelector('.card-keys__display')
+    const search = document.getElementById("search-btn");
 
     ///PREPARE NUMBERS OF LOTTO THAT ARE POSSIBLE TO BE SELECTED AND ADD ITS BUTTONS LINKING ONCLICK FUNCTION AND ITS VALUE////////////////////////////////////////////////////////////////////////////////////////////////////////
     var numbers = [];
@@ -25,10 +44,14 @@ window.onload = init;
     //put the buttons and its value from numbers[] on div #keys
     for (var i=0; i < numbers.length; i++){
        var  btn = document.createElement("button")
-       var search = document.getElementById("search-btn");
 
        btn.className= "btn btn-secondary";
        btn.value = i+1;
+       btn.setAttribute("data-toggle", "tooltip");
+       btn.setAttribute("data-placement", "bottom");
+       btn.setAttribute("data-original-title","");
+       btn.setAttribute("title", "");
+       btn.setAttribute("onmouseenter", "mouseOverHandler(this)");
 
        //checks if didnt get at num_max yet if not, disable button and add to display
        btn.onclick = function(btn) {
@@ -53,6 +76,10 @@ window.onload = init;
            search.removeAttribute("disabled");
          }
 
+         if (selected_numbers.length == 4){
+           preSelection(selected_numbers)
+         }
+
        };
 
        btn.appendChild(document.createTextNode(numbers[i]));
@@ -63,8 +90,7 @@ window.onload = init;
 
 
     /// SAVE AND DISPLAY SELECTED NUMBERS /////////////////////////////////////////////////////////////////////////////////////////////
-    const display = document.querySelector('.card-keys__display')
-    var selected_numbers = []
+
 
     //add and remove keys from buttons clicked to display
     function add_key(key){
@@ -75,62 +101,158 @@ window.onload = init;
 
     function remove_key(key){
       selected_numbers = selected_numbers.filter(item => item !== key);
+      selected_numbers.sort()
+
       display.textContent = selected_numbers;
     }
+
+    function btnClick(btn) {
+      if (this.classList.contains("selected") == false){
+        if (n_amount < NUM_MAX){
+          $(this).addClass("selected");
+          add_key(this.value); //add to display
+          n_amount++;
+        }
+      }
+      else{
+        $(this).removeClass("selected");
+        remove_key(this.value);
+        n_amount--;
+
+        //disable search button
+        search.setAttribute("disabled",true);
+      }
+
+      //active button to search
+      if (n_amount == NUM_MAX){
+        search.removeAttribute("disabled");
+      }
+
+      if (selected_numbers.length == 4){
+        preSelection(selected_numbers)
+      }
+
+    }
+
 
   }
 })(window, document, undefined);
 
 
-
-
-
-
-
-
-
-
-file_name = "Todos-os-resultados-da-Mega-Sena-—-Rede-Loteria.csv";
-//var csv is the CSV file with headers
-csvJSON(file_name)
-function csvJSON(file){
+////////
+var json = csvJSON(url)
+console.log(json)
+function csvJSON(url){
 
   var request = new XMLHttpRequest();
-  request.open("GET", file, false);
+  request.open("GET", url, false);
   request.send(null);
-  var csvData = new Array();
-  var jsonObject = request.responseText.split(/\r?\n|\r/);
-  for (var i = 0; i < jsonObject.length; i++) {
-    csvData.push(jsonObject[i].split(','));
-  }
-  console.log(csvData)
-// Retrived dat
 
-  // var lines=csv.split("\n");
-  //
-  // var result = [];
-  //
-  // // NOTE: If your columns contain commas in their values, you'll need
-  // // to deal with those before doing the next step
-  // // (you might convert them to &&& or something, then covert them back later)
-  // // jsfiddle showing the issue https://jsfiddle.net/
-  // var headers=lines[0].split(",");
-  //
-  // for(var i=1;i<lines.length;i++){
-  //
-  //     var obj = {};
-  //     var currentline=lines[i].split(",");
-  //
-  //     for(var j=0;j<headers.length;j++){
-  //         obj[headers[j]] = currentline[j];
-  //     }
-  //
-  //     result.push(obj);
-  //
-  // }
-  //
-  // //return result; //JavaScript object
-  // return JSON.stringify(result); //JSON
+
+  var lines= request.responseText.split("\n");
+  for(var i=0;i<lines.length-1;i++){
+    var line = lines[i];
+    var j= line.length-2;
+
+    while(line[j] != "\""){
+      j--;
+    }
+    j--;
+    lines[i] = lines[i].replace(lines[i].substring(j, lines.length),"")
+
+    lines[i] = lines[i].replace(/\"/gi, "");
+
+  }
+  var result = [];
+
+  var headers=lines[0].split(",");
+
+  var aux=headers
+  var headers = aux.slice(0,2);
+  headers.push(aux[8]);
+
+  for (var i=1;i<lines.length;i++){
+
+      var obj = {};
+
+      aux=lines[i].split(",");
+      var number_winner = aux.slice(2,8);
+      var currentline = aux.slice(0,1);
+
+      currentline.push(number_winner);
+      currentline.push(aux[8]);
+
+      for (var j=0;j<headers.length;j++){
+          obj[headers[j]] = currentline[j];
+      }
+
+      result.push(obj);
+  }
+
+  return(result); //JavaScript object
+  // return ( JSON.stringify(result)); //JSON
+
 }
 
- // document.getElementById("myBtn").disabled = true;
+//compare two arrays and return how many elements are shared
+function compareArray(numbers, data){
+  var hits = 0
+  numbers.filter(function(element){
+    if (data.includes(element)){
+      hits++;
+    }
+  });
+  return hits;
+}
+
+//activates when 4 elements are selected making a pre selection in the json
+function preSelection(numbers){
+  index_hits = []
+  console.log(numbers)
+  for (var i=0; i< json.length; i++ ){
+    if (compareArray(numbers, json[i].Data) >=2) {
+      index_hits.push(i)
+    }
+  }
+
+}
+
+//button conferir, only when there are 6 numbers selected, saves and shows the games that 4, 5 or 6 numbers selected appers
+function conferir(numbers){
+  index_quadra = []
+  index_quina = []
+  index_sena = []
+
+  console.log(numbers)
+  console.log(index_hits)
+  for (i in index_hits){
+    switch (compareArray(numbers, json[i].Data)) {
+      case 4:
+        index_quadra.push(i);
+        break;
+      case 5:
+        index_quina.push(i);
+        break;
+      case 6:
+        index_sena.push(i);
+        break;
+
+      default:
+
+    }
+  }
+
+  console.log(index_quadra)
+  console.log(index_quina)
+  console.log(index_sena)
+}
+
+function mouseOverHandler(btn){
+  console.log($(btn).value)
+
+  for (var i=0; i<json.length; i++){
+    if (compareArray([value], json[i].Data) > 0){
+      console.log(json[i].Data)
+    }
+  }
+}
