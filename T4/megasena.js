@@ -13,13 +13,7 @@ var NUM_MAX = 6;
 var n_amount = 0; //amount of keys buttons selected
 
 var selected_numbers = []
-
 var index_hits = [];
-var index_quadra = [];
-var index_quina = [];
-var index_sena = [];
-
-
 
 (function(window, document, undefined){
 
@@ -51,7 +45,6 @@ window.onload = init;
        btn.setAttribute("data-placement", "bottom");
        btn.setAttribute("data-original-title","");
        btn.setAttribute("title", "");
-       btn.setAttribute("onmouseenter", "mouseOverHandler(this)");
 
        //checks if didnt get at num_max yet if not, disable button and add to display
        btn.onclick = function(btn) {
@@ -95,13 +88,13 @@ window.onload = init;
     //add and remove keys from buttons clicked to display
     function add_key(key){
       selected_numbers.push(key)
-      selected_numbers.sort()
+      selected_numbers.sort(compare)
       display.textContent = selected_numbers;
     }
 
     function remove_key(key){
       selected_numbers = selected_numbers.filter(item => item !== key);
-      selected_numbers.sort()
+      selected_numbers.sort(compare)
 
       display.textContent = selected_numbers;
     }
@@ -134,20 +127,42 @@ window.onload = init;
 
     }
 
-
   }
 })(window, document, undefined);
 
+function compare (a, b) {
+    return a - b;
+}
 
-////////
-var json = csvJSON(url)
-console.log(json)
-function csvJSON(url){
+//count every concurso that the number appers
+function mouseover(btn){
 
-  var request = new XMLHttpRequest();
-  request.open("GET", url, false);
-  request.send(null);
+  value = btn.value
+  var result = 0
+  for (var i=0; i<json.length; i++){
+    if (compareArray([value], json[i].Data) > 0)
+      result+=1;
+  }
+  btn.setAttribute("data-original-title","Vezes sorteado: " + result.toString());
+}
 
+//
+function updateKeys(){
+  var keys = document.getElementById("keys").childNodes;
+  for(var i=1;i<keys.length;i++){
+    mouseover(keys[i]);
+  }
+
+}
+
+//////// LOAD CSV
+function loadCsv(){
+  json = csvJSON();
+  updateKeys();
+
+}
+
+function processData(request){
 
   var lines= request.responseText.split("\n");
   for(var i=0;i<lines.length-1;i++){
@@ -189,8 +204,17 @@ function csvJSON(url){
       result.push(obj);
   }
 
-  return(result); //JavaScript object
-  // return ( JSON.stringify(result)); //JSON
+  return(result); //JSON JavaScript object
+}
+
+function csvJSON(){
+
+  var request = new XMLHttpRequest();
+
+  request.open("GET", url, false);
+  request.send(null);
+  return processData(request)
+
 
 }
 
@@ -217,7 +241,7 @@ function preSelection(numbers){
 
 }
 
-//button conferir, only when there are 6 numbers selected, saves and shows the games that 4, 5 or 6 numbers selected appers
+//button conferir (only when there are 6 numbers selected) saves the index of object with all concursos, saves and shows the games that 4, 5 or 6 numbers selected appers
 function conferir(numbers){
   index_quadra = []
   index_quina = []
@@ -226,7 +250,9 @@ function conferir(numbers){
   console.log(numbers)
   console.log(index_hits)
   for (i in index_hits){
-    switch (compareArray(numbers, json[i].Data)) {
+    var data = json[i].Data
+
+    switch (compareArray(numbers, data)) {
       case 4:
         index_quadra.push(i);
         break;
@@ -243,16 +269,50 @@ function conferir(numbers){
   }
 
   console.log(index_quadra)
-  console.log(index_quina)
-  console.log(index_sena)
+
+  ///////display results
+  displayResults(index_quadra, "Quadra")
+  displayResults(index_quina, "Quina")
+  displayResults(index_sena, "Sena")
 }
 
-function mouseOverHandler(btn){
-  console.log($(btn).value)
-
-  for (var i=0; i<json.length; i++){
-    if (compareArray([value], json[i].Data) > 0){
-      console.log(json[i].Data)
-    }
+//gets index of result and calls addResult to put in the table
+function displayResults(results, hits){
+  console.log(results)
+  for (var i of results){
+    console.log(i)
+    var data = json[i];
+    addResult(data, hits)
   }
+
+  //
+  var display = document.getElementById("lotto-results");
+  display.style.display = "inline";
+}
+
+//puts results in the table, adding a line every call
+function addResult (data, hits){
+
+  var lottoResults = document.getElementById("results-table");
+  var tr = document.createElement("tr");
+   tr.classList.add("table-secondary");
+
+  //concurso
+  var th = document.createElement("th");
+  th.setAttribute("scope", "row");
+  th.appendChild(document.createTextNode(data["Conc."]));
+  tr.appendChild(th);
+
+  //acertos
+  var th = document.createElement("th");
+  th.appendChild(document.createTextNode(hits));
+  tr.appendChild(th);
+
+  //sorteio
+  var th = document.createElement("th");
+  th.appendChild(document.createTextNode(data.Data));
+  tr.appendChild(th);
+
+  lottoResults.appendChild(tr);
+
 }

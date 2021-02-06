@@ -187,6 +187,8 @@ a:hover{
   z-index: 1;
 }
 
+
+
 .btn-secondary{
   background-color: #c27878 !important;
   border-radius: 0 !important;
@@ -197,5 +199,9 @@ a:hover{
   background-color: gray !important;
 }
 #btn-search{
+  background-color: #c27878 !important;
+}
+
+.table-secondary{
   background-color: #c27878 !important;
 }
