@@ -66,9 +66,9 @@
       </ol>
 
       <h1>Loteria</h1>
-      <p style="color:#888">Trabalho 4 de programação web: Selecione 6 números e confira se eles já sairam na mega-sena. </p>
-      <p style="color:#888"> Primeiro é preciso carregar o arquivo clicando no botão abaixo. Depois digite os números escolhidos e será verificado se já sairam. </p>
-      <p  style="color:#888"> É possivel acompanhar o processamento pelo console. </p>
+      <p class="megasena-text">Trabalho 4 de programação web: Selecione 6 números e confira se eles já sairam na mega-sena. 
+       Primeiro é preciso carregar o arquivo clicando no botão abaixo. Depois digite os números escolhidos e será verificado se já sairam.
+  É possivel acompanhar o processamento pelo console. </p>
 
       <button type="button" class="btn btn-secondary" onclick="loadCsv()">Carregar Mega-Sena</button>
 
@@ -111,6 +111,9 @@
                   <!-- resultados -->
                 </tbody>
             </table>
+
+            <button id="clean-btn" class = "btn btn-secondary" style="margin-top: 6px" onclick="cleanResultsTable()">Limpar Tabela</button>
+
           </div>
         </div>
       </div>

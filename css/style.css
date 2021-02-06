@@ -209,3 +209,10 @@ a:hover{
   background-color: #c27878 !important;
 
 }
+
+.megasena-text{
+  color:#888;
+  text-align: left;
+  margin-left: 50px;;
+  max-width: 1000px;
+}

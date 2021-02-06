@@ -283,16 +283,22 @@ function conferir(numbers){
   }
 }
 
+function cleanResultsTable(){
+  var table = document.getElementById("results-table");
+  table.innerHTML = '';
+
+  var display = document.getElementById("lotto-results");
+  display.style.display = "none";
+}
 
 ////FUNCTIONS RELATED TO SHOWING THE SEARCH RESULTS///////////////////////////////////////////////////////////////////////////////
 //gets index of result and calls addResult to put in the table
 function displayResults(results, hits){
+
   for (var i of results){
     var data = json[i];
     addResult(data, hits)
   }
-
-  //
   var display = document.getElementById("lotto-results");
   display.style.display = "inline";
 }
