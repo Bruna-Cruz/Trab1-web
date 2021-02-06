@@ -43,6 +43,11 @@ section:after {
   clear: both;
 }
 
+button {
+    background-color: #c27878 !important;
+}
+
+
 /* NAV CSS */
 /* Create two columns/boxes that floats next to each other */
 .nav {
@@ -188,9 +193,8 @@ a:hover{
 }
 
 
-
 .btn-secondary{
-  background-color: #c27878 !important;
+  /* background-color: #c27878 !important; */
   border-radius: 0 !important;
   border-color: white;
 }
@@ -198,10 +202,10 @@ a:hover{
 .selected {
   background-color: gray !important;
 }
-#btn-search{
-  background-color: #c27878 !important;
-}
 
-.table-secondary{
+
+.table-secondary > th,
+.table-secondary > td {
   background-color: #c27878 !important;
+
 }

@@ -1,18 +1,23 @@
-const url = "https://raw.githubusercontent.com/Bruna-Cruz/Trab1-web/main/T4/Todos-os-resultados-da-Mega-Sena-%E2%80%94-Rede-Loteria.csv";
+    //
+    // (20 pontos) Ao abrir o link, deve aparecer uma tabela de 6x10 de botões (checkbox, ou qualquer coisa que lembre um volante da mega-sena). Ao clicar um botão, o número correspondente deve ser copiado para um elemento "jogo" abaixo da tabela. Ao clicar no número uma segunda vez, o número deve ser eliminado do elemento "jogo". Limite de números no elemento "jogo": 6.
+    // (20 pontos) Criar um botão "conferir" que só será habilitado quando o elemento "jogo" tiver exatamente seis números.
+    // (20 pontos) Criar um botão "carregar" que, ao ser acionado, deve carregar um arquivo json contendo o resultado de todos resultados da mega sena. Este arquivo (formato csv) pode ser encontrado no site da Caixa. A versão json é definida pelo aluno e pode conter informações compiladas para a aplicação ser mais rápida.
+    // (20 pontos) Ao clicar no botão "conferir" deve aparecer a lista de concursos que aquele jogo ganhou a mega-sena, quina e quadra.
+    // (10 pontos) Questões estéticas são por conta do aluno.
+    // (10 pontos) Incluir alguma ação relevate com o evento "mouseover", como por exemplo o número de concursos que o número foi sorteado.
+url = "https://raw.githubusercontent.com/Bruna-Cruz/Trab1-web/main/T4/Todos-os-resultados-da-Mega-Sena-%E2%80%94-Rede-Loteria.csv";
 //var csv is the CSV file with headers
-var json;
 
-//game keys
 const MAX = 60;
 var NUM_MAX = 6;
 var n_amount = 0; //amount of keys buttons selected
 
 var selected_numbers = []
-var index_hits = []; //
+var index_hits = [];
 
-////FUNCTIONS RELATED TO INICIAL HTML MEGASENA PAGE ///////////////////////////////////////////////////////////////////////////////
 (function(window, document, undefined){
 
+  ////FUNCTIONS RELATED TO INICIAL HTML MEGASENA PAGE ///////////////////////////////////////////////////////////////////////////////
 window.onload = init;
 
   function init(){
@@ -24,7 +29,7 @@ window.onload = init;
     const display = document.querySelector('.card-keys__display')
     const search = document.getElementById("search-btn");
 
-    ///PREPARE KEYS NUMBERS (OF LOTTO) THAT ARE POSSIBLE TO BE SELECTED AND ADD ITS BUTTONS LINKING ONCLICK FUNCTION AND ITS VALUE
+    ///PREPARE NUMBERS OF LOTTO THAT ARE POSSIBLE TO BE SELECTED AND ADD ITS BUTTONS LINKING ONCLICK FUNCTION AND ITS VALUE////////////////////////////////////////////////////////////////////////////////////////////////////////
     var numbers = [];
 
     for (var i=1; i <= MAX; i++){
@@ -73,12 +78,14 @@ window.onload = init;
        };
 
        btn.appendChild(document.createTextNode(numbers[i]));
-
        var keys = document.getElementById("keys");
+
        keys.appendChild(btn);
     }
 
-    /// SAVE AND DISPLAY SELECTED NUMBERS
+
+    /// SAVE AND DISPLAY SELECTED NUMBERS /////////////////////////////////////////////////////////////////////////////////////////////
+
 
     //add and remove keys from buttons clicked to display
     function add_key(key){
@@ -129,7 +136,6 @@ function compare (a, b) {
     return a - b;
 }
 
-////FUNCTIONS RELATED TO THE NUMBERS KEYS AFTER THE JSON IS LOADED///////////////////////////////////////////////////////////////////////////////
 //count every concurso that the number appers
 function mouseover(btn){
 
@@ -152,7 +158,6 @@ function updateAndEnableKeys(){
 
 }
 
-//FUNCTIONS RELATED TO GET THE CSV AND LOAD INTO OBJECT
 function processData(request){
   var lines= request.split("\n");
   for(var i=0;i<lines.length-1;i++){
@@ -199,25 +204,36 @@ function processData(request){
 
 function getJSON(){
 
+   // var request = html
+
   return $.get(url, function(data, status){
-        console.log("loading file", status)
-  })
+
+      })
+
+  // request.open("GET", url, false);
+  // request.send(null);
+  // return processData(request)
 
 }
 
-// load csv into object through ajax jquery when its done calls processData and update keys
+//////// LOAD CSV
 function loadCsv(){
 
   $.when(getJSON()).done(function(response){
-    //APOS SER CARREGADO
     alert("Arquivo carregado com sucesso!")
+
+    console.log(response)
     json = processData(response)
+    console.log(json)
     updateAndEnableKeys();
   })
+  // json = csvJSON();
+
+  //APOS SER CARREGADO
+
 
 }
 
-//FUNCTION RELATED TO SEARCHING THE SELECTED NUMBERS INTO JSON OBJECT
 //compare two arrays and return how many elements are shared
 function compareArray(numbers, data){
   var hits = 0
@@ -232,12 +248,13 @@ function compareArray(numbers, data){
 //activates when 4 elements are selected making a pre selection in the json
 function preSelection(numbers){
   index_hits = []
-  console.log("Pre selection with 4 numbers: ", numbers)
+  console.log(numbers)
   for (var i=0; i< json.length; i++ ){
     if (compareArray(numbers, json[i].Data) >=2) {
       index_hits.push(i)
     }
   }
+
 }
 
 //button conferir (only when there are 6 numbers selected) saves the index of object with all concursos, saves and shows the games that 4, 5 or 6 numbers selected appers
@@ -246,9 +263,8 @@ function conferir(numbers){
   index_quina = []
   index_sena = []
 
-  console.log("Searching games with the numbers: ", numbers)
-  console.log("Index of games in the pre select hits: ", index_hits)
-
+  console.log(numbers)
+  console.log(index_hits)
   for (i in index_hits){
     var data = json[i].Data
 
@@ -268,26 +284,19 @@ function conferir(numbers){
     }
   }
 
-  console.log("Quadra index of hits: ", index_quadra)
-  console.log("Quina index of hits: ", index_quina)
-  console.log("Sena index of hits: ", index_sena)
-
+  console.log(index_quadra)
 
   ///////display results
-  if (index_quadra.length == index_quina.length == index_sena.length != 0){
-    displayResults(index_quadra, "Quadra")
-    displayResults(index_quina, "Quina")
-    displayResults(index_sena, "Sena")
-  } else {
-    alert("Nenhum jogo encontrado com os números selecionados :(")
-  }
+  displayResults(index_quadra, "Quadra")
+  displayResults(index_quina, "Quina")
+  displayResults(index_sena, "Sena")
 }
 
-
-////FUNCTIONS RELATED TO SHOWING THE SEARCH RESULTS///////////////////////////////////////////////////////////////////////////////
 //gets index of result and calls addResult to put in the table
 function displayResults(results, hits){
+  console.log(results)
   for (var i of results){
+    console.log(i)
     var data = json[i];
     addResult(data, hits)
   }
