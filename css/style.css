@@ -43,6 +43,11 @@ section:after {
   clear: both;
 }
 
+button {
+    background-color: #c27878 !important;
+}
+
+
 /* NAV CSS */
 /* Create two columns/boxes that floats next to each other */
 .nav {
@@ -187,8 +192,9 @@ a:hover{
   z-index: 1;
 }
 
+
 .btn-secondary{
-  background-color: #c27878 !important;
+  /* background-color: #c27878 !important; */
   border-radius: 0 !important;
   border-color: white;
 }
@@ -196,6 +202,17 @@ a:hover{
 .selected {
   background-color: gray !important;
 }
-#btn-search{
+
+
+.table-secondary > th,
+.table-secondary > td {
   background-color: #c27878 !important;
+
+}
+
+.megasena-text{
+  color:#888;
+  text-align: left;
+  margin-left: 50px;;
+  max-width: 1000px;
 }
