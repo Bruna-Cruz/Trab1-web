@@ -4,7 +4,7 @@ var json; //object
 
 //game keys
 const MAX = 60;
-var NUM_MAX = 6;
+const NUM_MAX = 6;
 var n_amount = 0; //amount of keys buttons selected
 
 var selected_numbers = []
