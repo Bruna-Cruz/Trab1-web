@@ -1,6 +1,6 @@
-const url = "https://raw.githubusercontent.com/Bruna-Cruz/Trab1-web/main/T4/Todos-os-resultados-da-Mega-Sena-%E2%80%94-Rede-Loteria.csv";
-//var csv is the CSV file with headers
-var json;
+const url = "https://raw.githubusercontent.com/Bruna-Cruz/Trab1-web/trab4/T4/resultadosMega.json";
+
+var json; //object
 
 //game keys
 const MAX = 60;
@@ -92,6 +92,10 @@ window.onload = init;
       selected_numbers.sort(compare)
 
       display.textContent = selected_numbers;
+
+      if (selected_numbers.length >= 4){
+         preSelection(selected_numbers.slice(0,4))
+       }
     }
 
     function btnClick(btn) {
@@ -152,50 +156,53 @@ function updateAndEnableKeys(){
 
 }
 
-//FUNCTIONS RELATED TO GET THE CSV AND LOAD INTO OBJECT
-function processData(request){
-  var lines= request.split("\n");
-  for(var i=0;i<lines.length-1;i++){
-    var line = lines[i];
-    var j= line.length-2;
+//FUNCTIONS RELATED TO GET THE CSV AND GET JSON (usado para converter o csv para o json)
+// function processCSV(request){
+//   var lines= request.split("\n");
+//   for(var i=0;i<lines.length-1;i++){
+//     var line = lines[i];
+//     var j= line.length-2;
+//
+//     while(line[j] != "\""){
+//       j--;
+//     }
+//     j--;
+//     lines[i] = lines[i].replace(lines[i].substring(j, lines.length),"")
+//
+//     lines[i] = lines[i].replace(/\"/gi, "");
+//
+//   }
+//   var result = [];
+//
+//   var headers=lines[0].split(",");
+//
+//   var aux=headers
+//   var headers = aux.slice(0,2);
+//   headers.push(aux[8]);
+//
+//   for (var i=1;i<lines.length;i++){
+//
+//       var obj = {};
+//
+//       aux=lines[i].split(",");
+//       var number_winner = aux.slice(2,8);
+//       var currentline = aux.slice(0,1);
+//
+//       currentline.push(number_winner);
+//       currentline.push(aux[8]);
+//
+//       for (var j=0;j<headers.length;j++){
+//           obj[headers[j]] = currentline[j];
+//       }
+//
+//       result.push(obj);
+//
+//       console.log(result)
+//   }
+//
+//   return(result); //JSON JavaScript object
+// }
 
-    while(line[j] != "\""){
-      j--;
-    }
-    j--;
-    lines[i] = lines[i].replace(lines[i].substring(j, lines.length),"")
-
-    lines[i] = lines[i].replace(/\"/gi, "");
-
-  }
-  var result = [];
-
-  var headers=lines[0].split(",");
-
-  var aux=headers
-  var headers = aux.slice(0,2);
-  headers.push(aux[8]);
-
-  for (var i=1;i<lines.length;i++){
-
-      var obj = {};
-
-      aux=lines[i].split(",");
-      var number_winner = aux.slice(2,8);
-      var currentline = aux.slice(0,1);
-
-      currentline.push(number_winner);
-      currentline.push(aux[8]);
-
-      for (var j=0;j<headers.length;j++){
-          obj[headers[j]] = currentline[j];
-      }
-
-      result.push(obj);
-  }
-
-  return(result); //JSON JavaScript object
-}
 
 function getJSON(){
 
@@ -205,19 +212,19 @@ function getJSON(){
 
 }
 
-// load csv into object through ajax jquery when its done calls processData and update keys
-function loadCsv(){
+// load json into object through ajax jquery when its done calls  update keys
+function loadJSON(){
 
   $.when(getJSON()).done(function(response){
     //APOS SER CARREGADO
     alert("Arquivo carregado com sucesso!")
-    json = processData(response)
+    json = JSON.parse(response)
     updateAndEnableKeys();
   })
 
 }
 
-//FUNCTION RELATED TO SEARCHING THE SELECTED NUMBERS INTO JSON OBJECT
+//FUNCTIONS RELATED TO SEARCHING THE SELECTED NUMBERS IN THE JSON OBJECT
 //compare two arrays and return how many elements are shared
 function compareArray(numbers, data){
   var hits = 0
@@ -232,7 +239,7 @@ function compareArray(numbers, data){
 //activates when 4 elements are selected making a pre selection in the json
 function preSelection(numbers){
   index_hits = []
-  console.log("Pre selection with 4 numbers: ", numbers)
+  console.log("Pre selection with first 4 numbers: ", numbers)
   for (var i=0; i< json.length; i++ ){
     if (compareArray(numbers, json[i].Data) >=2) {
       index_hits.push(i)
