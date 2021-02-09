@@ -1,4 +1,4 @@
-const url = "https://raw.githubusercontent.com/Bruna-Cruz/Trab1-web/trab4/T4/resultadosMega.json";
+const url = "https://raw.githubusercontent.com/Bruna-Cruz/Trab1-web/main/T4/resultadosMega.json";
 
 var json; //object
 
